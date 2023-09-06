@@ -227,7 +227,7 @@ soko      63% (down from widespread)
 misikeke  60%
 lanpan    58%
 oko       57%
-epiku     53% (up from common)
+epiku     53% (up from uncommon)
 meso      52%
 ```
 
