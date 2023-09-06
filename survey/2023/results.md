@@ -18,6 +18,8 @@ ale (without ali) dropped from 92% to 90%. There is possibility of ale dropping 
 
 Only 3 (out of 63) previously undocumented words made it in. On the other hand, old words aren't really decaying below 1%. This is an indication we are not good enough at selecting new words to show in the survey.
 
+The change from last year is fairly small, all words (except nimisin) are within 10%. The rise of "nimisin" came as a surprise to experienced users, but it checks out with alternative sources of statistics.
+
 I've unfortunately forgot to include a fake word in the poll this time round.
 
 ## Highlights
