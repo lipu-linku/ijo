@@ -64,7 +64,7 @@ Zoomed into obscure words.
 
 <div align="center"><img src="obscures.png"></img></div>
 
-Zoomed into core words.
+Zoomed into core words (except ale).
 
 <div align="center"><img src="cores.png"></img></div>
 
