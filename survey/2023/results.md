@@ -14,7 +14,7 @@ Obscure + undocumented words have had a hard time mixing with obligatory respons
 
 The ability to skip sections also explains why core words are considerably squished compared to last year.
 
-ale (without ali) dropped from 92% to 90%. There is possibility of ale dropping below 90% some time in the future. While this represents the reality of ale-users vs ali-users, this would be misleading to those dictionary users who only look at core words, and would see neither. We should rework the dictionary/survey to list alternate spellings as a single entry. Polling ale vs ali should still be done, just not in this direct form.
+ale (without ali) dropped from 92% to 90%. There is possibility of ale dropping below 90% some time in the future. While this represents the reality of ale-users vs ali-users, this would be misleading to those dictionary users who only look at core words, and would see neither. We should rework the dictionary/survey to list alternate spellings as a single entry. We looked at combining ale + ali, and it ends up around 97~99%. Polling ale vs ali should still be done, just not in this direct form.
 
 Only 3 (out of 63) previously undocumented words made it in. On the other hand, old words aren't really decaying below 1%. This is an indication we are not good enough at selecting new words to show in the survey.
 
