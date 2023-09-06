@@ -8,9 +8,9 @@ Compared to last year, we have changed how the words are grouped on the survey p
 
 868 respondees is *a lot*. The opportunity for further coverage growth is limited.
 
-The act of making uncommon+rare (previously largely ku lili) words obligatory to answer made them more discoverable to respondees, accounting for a ~5% increase across the board in that category.
+The act of making uncommon + rare (previously largely ku lili) words obligatory to answer made them more discoverable to respondees, accounting for a ~5% increase across the board in that category.
 
-Obscure+undocumented words have had a hard time mixing with obligatory responses. There's an artificial gap between pake (13%) and kamalawala (10%). The ability to skip sections, plus the sheer amount of dead-ish words in "obscure", made replying to this section unappealing to enough people to create a gap.
+Obscure + undocumented words have had a hard time mixing with obligatory responses. There's an artificial gap between pake (13%) and kamalawala (10%). The ability to skip sections, plus the sheer amount of dead-ish words in "obscure", made replying to this section unappealing to enough people to create a gap.
 
 The ability to skip sections also explains why core words are considerably squished compared to last year.
 
@@ -25,14 +25,19 @@ I've unfortunately forgot to include a fake word in the poll this time round.
 ### Ascending categories
 
 common -> widespread: **n**
+
 uncommon -> common: **epiku**
+
 rare -> uncommon: **nimisin, oke, usawi, wuwojiti, yupekosi, omekapo**
+
 obscure -> rare: **kamalawala**
+
 new: **eliki, pakola, we (content word)**
 
 ### Descending categories
 
 widespread -> common: **kipisi, soko**
+
 obscure -> no longer notable: **aka, awase, eki, ewe, i, iki, ipi, itomi, jaku, jalan, jans, kapa, konsi, lo, loka, lokon, neja, samu, sipi, ten, umesu, wi, ako, kutopoma, lijokuku, suke, toma**
 
 ## Cool graphs
