@@ -347,6 +347,4 @@ yutu               2%
 
 93 words:
 
-```
-aka, aki, ako, aku, aleta, an, anta, antikontitutonelema, apelo, api, apowesi, asen, ata, awa, awase, eki, enepi, ewe, i, iki, inisa, inta, ipi, itomi, jaku, jalan, jans, ju, kalapisituji, kana, kapa, kasan, kikolo, kikulo, kokoliko, konsi, konsuno, kosikosa, kutopoma, lajotu, lapan, lijokuku, likono, lo, loka, lokon, lose, lu, mamasi, masalo, matu, nali, ne, neja, nowi, nu, olala, onono, otomalasi, panke, papa, pataka, pipolo, sali, salo, samu, sapelipope, se, si\i\ilapa, sikako, sipi, sipije, siwala, sole, su, suke, ta, tankala / tenkala, tapuje, teken, teki, ten, toma, tona, towoki, u, ulu, umesu, waken, wasa, we (particle), wi, wiwi
-```
+*aka, aki, ako, aku, aleta, an, anta, antikontitutonelema, apelo, api, apowesi, asen, ata, awa, awase, eki, enepi, ewe, i, iki, inisa, inta, ipi, itomi, jaku, jalan, jans, ju, kalapisituji, kana, kapa, kasan, kikolo, kikulo, kokoliko, konsi, konsuno, kosikosa, kutopoma, lajotu, lapan, lijokuku, likono, lo, loka, lokon, lose, lu, mamasi, masalo, matu, nali, ne, neja, nowi, nu, olala, onono, otomalasi, panke, papa, pataka, pipolo, sali, salo, samu, sapelipope, se, si\i\ilapa, sikako, sipi, sipije, siwala, sole, su, suke, ta, tankala / tenkala, tapuje, teken, teki, ten, toma, tona, towoki, u, ulu, umesu, waken, wasa, we (particle), wi, wiwi*
