@@ -354,6 +354,6 @@ yutu               2%
 
 93 words:
 
-1%: *aki, ako, aleta, an, antikontitutonelema, api, asen, ata, awa, inisa, inta, kalapisituji, kasan, kikulo, kutopoma, lajotu, lijokuku, likono, lose, mamasi, masalo, matu, nali, ne, onono, otomalasi, pataka, pipolo, sali, salo, se, si\i\ilapa, sipije, siwala, sole, su, suke, tapuje, teken, teki, toma, ulu, waken, wasa*
+1%: *aka, aku, anta, apelo, apowesi, awase, eki, enepi, ewe, i, iki, ipi, itomi, jaku, jalan, jans, ju, kana, kapa, kikolo, kokoliko, konsi, konsuno, kosikosa, lapan, lo, loka, lokon, lu, neja, nowi, nu, olala, panke, papa, samu, sapelipope, sikako, sipi, ta, tankala / tenkala, ten, tona, towoki, u, umesu, we (particle), wi, wiwi*
 
-0%: *aka, aku, anta, apelo, apowesi, awase, eki, enepi, ewe, i, iki, ipi, itomi, jaku, jalan, jans, ju, kana, kapa, kikolo, kokoliko, konsi, konsuno, kosikosa, lapan, lo, loka, lokon, lu, neja, nowi, nu, olala, panke, papa, samu, sapelipope, sikako, sipi, ta, tankala / tenkala, ten, tona, towoki, u, umesu, we (particle), wi, wiwi*
+0%: *aki, ako, aleta, an, antikontitutonelema, api, asen, ata, awa, inisa, inta, kalapisituji, kasan, kikulo, kutopoma, lajotu, lijokuku, likono, lose, mamasi, masalo, matu, nali, ne, onono, otomalasi, pataka, pipolo, sali, salo, se, si\i\ilapa, sipije, siwala, sole, su, suke, tapuje, teken, teki, toma, ulu, waken, wasa*
