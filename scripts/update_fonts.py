@@ -10,8 +10,8 @@ from zipfile import ZipFile
 
 LOG = logging.getLogger()
 
-HEADERS = {  # pretend to be Chrome 101 for Discord links
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+HEADERS = {  # pretend to be Chrome 121 for Discord links
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 }
 
 JASIMA = "https://raw.githubusercontent.com/lipu-linku/jasima/master/data.json"
