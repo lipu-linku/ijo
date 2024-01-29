@@ -12,9 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: "pip"
+      - name: Install python dependencies
+        run: pip install python-magic
+        # NOTE: if we add more in the future, make a requirements file
       - name: Configuration
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
