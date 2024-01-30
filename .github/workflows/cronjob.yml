@@ -1,0 +1,33 @@
+# A cronjob for updating the fonts in ijo/nasinsitelen
+
+name: Cronjob for nasin-sitelen
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install python dependencies
+        run: pip install -r scripts/requirements.txt
+      - name: Configuration
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          git config --global user.email "AcipenserSturio@users.noreply.github.com"
+          git config --global user.name "AcipenserSturio"
+      - name: Update fonts in ijo
+        run: |
+          python scripts/update_fonts.py  # runs from repo root
+          git add nasinsitelen/
+          git diff-index --quiet --cached HEAD || git commit -m "Bump fonts for $(date --iso-8601)"
+          git push "https://$(GITHUB_TOKEN)@github.com/lipu-linku/ijo.git"
