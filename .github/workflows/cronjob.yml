@@ -29,5 +29,5 @@ jobs:
         run: |
           python scripts/update_fonts.py  # runs from repo root
           git add nasinsitelen/
-          git commit -m "Bump fonts for $(date --iso-8601)"
+          git diff-index --quiet --cached HEAD || git commit -m "Bump fonts for $(date --iso-8601)"
           git push "https://$(GITHUB_TOKEN)@github.com/lipu-linku/ijo.git"
