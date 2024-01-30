@@ -19,7 +19,6 @@ jobs:
           cache: "pip"
       - name: Install python dependencies
         run: pip install -r scripts/requirements.txt
-        # NOTE: if we add more in the future, make a requirements file
       - name: Configuration
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
