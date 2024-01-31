@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
 # STL
 import argparse
-import json
 import logging
 import os
-import urllib.request  # avoiding requests dep bc we can
 from io import BytesIO
 from zipfile import ZipFile
 
 # PDM
 import magic
 
-LOG = logging.getLogger()
+# LOCAL
+from utils import download, download_json
 
-HEADERS = {  # pretend to be Chrome 121 for Discord links
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.3"
-}
+LOG = logging.getLogger()
 
 SONA_FONTS = "https://api.linku.la/v1/fonts"
 
@@ -60,17 +57,6 @@ def is_font_file(to_check: bytes) -> bool:
     mimetype = magic.from_buffer(to_check, mime=True)
 
     return mimetype in VALID_MIMETYPES
-
-
-def download(url: str) -> bytes:
-    req = urllib.request.Request(url, headers=HEADERS)
-    resp = urllib.request.urlopen(req).read()
-    return resp
-
-
-def download_json(url: str) -> dict:
-    resp = download(url)
-    return json.loads(resp)
 
 
 def unzip_font_zip(fontzip: bytes, filename: str):
