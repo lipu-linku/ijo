@@ -26,7 +26,9 @@ Similar to 2023, the year on year comparison shows relatively little movement, m
 
 <div align="center"><img src="changes.png"></img></div>
 
-However, several noteworthy trends emerge:
+The graph above shows a comparison between 2024 scores (vertical) vs 2023 scores (horizontal). If a word is above the y = x line, its score has increased, if its below, it has gone down.
+
+Several noteworthy trends emerge:
 
 * Most of the obscure words, especially those in the 10-30% range, have dropped significantly, in some cases almost halving their usage score. This is in line with a general understanding that some of these words (kapesi, unu, misa) have experienced their time in the limelight some years prior and are no longer picked up by newcomers.
 
@@ -37,6 +39,8 @@ However, several noteworthy trends emerge:
 * **kokosila** drops from 31% to 26%, weirdly reversing its movement from 2022-2023, and putting it into obscure. This was accompanied by the rise in popularity of **penpo**, a previously undocumented word meaning "(pi) toki pona taso", mostly in reference to tpt events in ma pona.
 
 <div align="center"><img src="obscures.png"></img></div>
+
+Zooming into the range < 30%:
 
 Last year's poll showed an artificial gap between rare words (then 10-30%) and obscure words (then 2-10%), caused by a ridiculously oversized obscure section. The introduction of the unpolled Sandbox has helped with this, and the gap is closed and the words on either side have mixed together.
 
