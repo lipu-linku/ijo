@@ -67,3 +67,13 @@ uncommon -> obscure: **kokosila**
 sandbox -> obscure: **penpo, pakola**
 
 The full results are available as a [csv dump](scores-2024.csv), and results rounded to the nearest digit will be added to Linku.
+
+## Extra graph
+
+<div align="center"><img src="bend.png"></img></div>
+
+Full results, sorted from core to obscure.
+
+Blue to yellow represents the response types, from "I use it" to "I never use it".
+
+Honestly, this graph is not very insightful anymore, but it was nice to include it anyway.
