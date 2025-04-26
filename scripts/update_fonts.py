@@ -21,6 +21,7 @@ VALID_LICENSE_FAMILIES = [
     "MIT",
     "OFL",
     "CC",
+    "SIL Open Font License",
 ]
 VALID_MIMETYPES = [
     "font/sfnt",  # ttf
