@@ -23,6 +23,7 @@ from utils import download_json, existing_directory, existing_file
 LOG = logging.getLogger()
 
 SONA_WORDS = "https://api.linku.la/v1/words"
+SANDBOX_WORDS = "https://api.linku.la/v1/sandbox"
 
 IGNORABLES = {
     "plus",
@@ -55,8 +56,12 @@ VARIANT_NUMBERS = {
 }
 
 words = download_json(SONA_WORDS)
+sandbox = download_json(SANDBOX_WORDS)
 
-NIMI_LINKU = set(words.keys())
+NIMI_LINKU = {word_data["word"] for word_data in words.values()}
+NIMI_KO = {word_data["word"] for word_data in sandbox.values()}
+
+NIMI_ALE = NIMI_LINKU | NIMI_KO
 
 
 def strip_metadata(ligature: tuple[str, ...]) -> tuple[str, ...]:
@@ -104,7 +109,7 @@ def main(argv: argparse.Namespace):
             variant_suffix, ligature = handle_variant(ligature)
 
             word = "".join(ligature)
-            if word not in NIMI_LINKU:
+            if word not in NIMI_ALE:
                 continue
 
             svg_filename = word + variant_suffix + ".svg"
