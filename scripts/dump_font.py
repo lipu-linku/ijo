@@ -155,9 +155,10 @@ def correct_path_bounding_box(svg_file: str, pad_pct: float = 0.0):
 
     corrected_svg = lxml.etree.tostring(
         svg_elem,
-        # pretty_print=True,
-        # xml_declaration=True,
-        # encoding="UTF-8",
+        pretty_print=True,
+        xml_declaration=True,
+        encoding="UTF-8",
+        doctype="""<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >""",
     )
     with open(svg_file, "wb") as f:
         f.write(corrected_svg)
