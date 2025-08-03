@@ -2,10 +2,10 @@
 
 """
 This is a utility for dumping glyphs from a target font which implements ligatures.
-You must install `fontforge`. This is not provided in `./requirements.txt` because 
-that file is intended for Github Actions.
+You must install `fontforge`, `cairosvg`, and `lxml`.
+These are not provided in `./requirements.txt` because that file is for Github Actions.
 
-Example use: 
+Example use:
 python ./scripts/dump_font.py --font ./nasinsitelen/sitelenselikiwenasuki.ttf --directory ./sitelenpona/sitelen-seli-kiwen/
 """
 
@@ -16,6 +16,10 @@ import os
 
 # PDM
 import fontforge
+import lxml.etree
+from cairosvg.bounding_box import bounding_box_path
+from cairosvg.parser import Tree
+from cairosvg.surface import SVGSurface
 
 # LOCAL
 from utils import download_json, existing_directory, existing_file
@@ -93,6 +97,73 @@ def handle_variant(ligature: tuple[str, ...]) -> tuple[str, tuple[str, ...]]:
     return "", ligature
 
 
+def get_path_bounding_box(
+    svg_data: bytes,
+) -> tuple[float, float, float, float]:
+    tree = Tree(bytestring=svg_data)
+    surface = SVGSurface(tree, None, 300)
+    for node in tree.children:
+        if getattr(node, "tag", None) == "path":
+            # we expect exactly one
+            return bounding_box_path(surface=surface, node=node)
+
+    raise ValueError("No path found as direct child of SVG root")
+
+
+def correct_path_bounding_box(svg_file: str, pad_pct: float = 0.0):
+    with open(svg_file, "rb") as f:
+        svg_data = f.read()
+
+    minx, miny, width, height = get_path_bounding_box(svg_data)
+
+    new_minx = minx
+    new_miny = miny
+    new_maxx = minx + width
+    new_maxy = miny + height
+
+    svg_elem = lxml.etree.fromstring(svg_data)
+    orig_minx, orig_miny, orig_w, orig_h = map(float, svg_elem.get("viewBox").split())
+    orig_maxx = orig_minx + orig_w
+    orig_maxy = orig_miny + orig_h
+
+    if (
+        new_minx >= orig_minx
+        and new_miny >= orig_miny
+        and new_maxx <= orig_maxx
+        and new_maxy <= orig_maxy
+    ):
+        return
+
+    # integer pad
+    # minx -= pad_pct
+    # miny -= pad_pct
+    # width += pad_pct * 2
+    # height += pad_pct * 2
+
+    # percent pad
+    pad_x = width * pad_pct / 2
+    pad_y = height * pad_pct / 2
+    minx -= pad_x
+    miny -= pad_y
+    width += pad_x * 2
+    height += pad_y * 2
+
+    svg_elem = lxml.etree.fromstring(svg_data)
+    svg_elem.set("viewBox", f"{minx} {miny} {width} {height}")
+    svg_elem.set("width", str(width))
+    svg_elem.set("height", str(height))
+
+    corrected_svg = lxml.etree.tostring(
+        svg_elem,
+        # pretty_print=True,
+        # xml_declaration=True,
+        # encoding="UTF-8",
+    )
+    with open(svg_file, "wb") as f:
+        f.write(corrected_svg)
+    return
+
+
 def main(argv: argparse.Namespace):
     LOG.setLevel(argv.log_level)
 
@@ -114,11 +185,14 @@ def main(argv: argparse.Namespace):
 
             svg_filename = word + variant_suffix + ".svg"
             LOG.info("Creating %s", svg_filename)
-            glyph.export(os.path.join(argv.directory, svg_filename))
+            output_file = os.path.join(argv.directory, svg_filename)
+            glyph.export(output_file)
+
+            correct_path_bounding_box(output_file, 0.05)
 
             # WARNING: You CANNOT directly use the output. It MUST be hand-processed.
             # Different fonts use different variant numbers.
-            # You must also get permission to commit any dumped font data, respecting the license.
+            # You may also need permission to commit (distribute) font glyphs. Check the license!
 
 
 if __name__ == "__main__":
