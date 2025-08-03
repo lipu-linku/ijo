@@ -67,6 +67,8 @@ def strip_metadata(ligature: tuple[str, ...]) -> tuple[str, ...]:
 
 def is_ignorable(ligature: tuple[str, ...]) -> bool:
     # see `IGNORABLES`; we ignore ligatures for any non-primitive non-variant glyph
+    if not len(ligature):
+        return True
     return not not set(ligature).intersection(IGNORABLES)
 
 
