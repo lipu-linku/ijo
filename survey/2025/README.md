@@ -57,7 +57,7 @@ The list is topped by four words that are in some ways quite varied:
 
 Though the reasoning for why people may choose to avoid them is different in each case, they share a commonality: all are *nimi ku suli*, belonging to a higher-polling class of words from jan Sonja's 2020-2021 surveys, and highlighted as such in *lipu ku*. While it was certainly influential in 2021-2022, interest in the book (and its associated wordlist) has steadily faded. The word *ku* itself declined from 80% in 2022 to 61% 3 years later, putting it on track to move into the "uncommon" category next year.
 
-Other decreases on the list are perhaps somewhat harder to explain. **ali**, **pake**, **kapesi**, **powe** are old words which have all shined in some ways in 2020-2021 literature (e.g. [tu kuntu](https://lipu.pona.la/2021/02/tu-kuntu/a)), but fell out of fashion. **yupekosi**, **sutopatikuna** are jokes from several years ago about coining words. It is words like **usawi**, **kiki**, and **puwa** that are most puzzling -- perhaps people just stopped experimenting with them.
+Other decreases on the list are perhaps somewhat harder to explain. **ali**, **pake**, **kapesi**, **powe** are old words which have all shined in some ways in 2020-2021 literature (e.g. [tu kuntu](https://lipu.pona.la/2021/02/tu-kuntu/a)), but fell out of fashion. **yupekosi**, **sutopatikuna** are jokes from several years ago about coining words. **usawi** was polled obligatorily last year, but this year belongs among obscure words, which likely cuts it down a couple percentage points. It is words like **kiki**, and **puwa** that are most puzzling -- perhaps people just stopped experimenting with them.
 
 ### Biggest increases (up to +1.5%):
 
