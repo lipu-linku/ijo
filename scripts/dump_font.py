@@ -214,6 +214,9 @@ def main(argv: argparse.Namespace):
         filename = word + "." + argv.format
         output_file = os.path.join(argv.directory, filename)
         try:
+            # NOTE: usetransform is set to avoid
+            # https://github.com/fontforge/fontforge/issues/5695
+            # could copy instead of 2x export, but i prefer consistent logic
             glyph.export(output_file, usetransform=True)
             LOG.info("Exported %s (%s)", output_file, lig[2:])
             if argv.format == "svg":
