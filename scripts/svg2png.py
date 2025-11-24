@@ -3,13 +3,13 @@
 This is a utility for creating presentable PNGs from a directory of SVGs.
 The color of the SVGs will be inverted and a border added to maximize readability.
 
-This is necessary because Discord does not allow embedding SVGs. The preferential 
+This is necessary because Discord does not allow embedding SVGs. The preferential
 style must be applied to a pre-rendered glyph.
 
-You must install `cairosvg` and `lxml`. These are not provided in `./requirements.txt` 
+You must install `cairosvg` and `lxml`. These are not provided in `./requirements.txt`
 because that file is intended for Github Actions.
 
-Example use: 
+Example use:
 python ./scripts/svg2png.py --directory ./sitelenpona/sitelen-seli-kiwen/
 """
 

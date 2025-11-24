@@ -1,1 +1,4 @@
 python-magic==0.4.27
+fontforge-stubs==2025.11.10
+cairosvg==2.8.2
+lxml==6.0.2

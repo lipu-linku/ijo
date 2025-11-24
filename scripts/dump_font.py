@@ -6,7 +6,7 @@ You must install `fontforge`, `cairosvg`, and `lxml`.
 These are not provided in `./requirements.txt` because that file is for Github Actions.
 
 Example use:
-python ./scripts/dump_font.py --font ./nasinsitelen/sitelenselikiwenasuki.ttf --directory ./sitelenpona/sitelen-seli-kiwen/
+python ./scripts/dump_font.py -f ./nasinsitelen/sitelenselikiwenasuki.ttf -d ./sitelenpona/sitelen-seli-kiwen/
 """
 
 # STL
@@ -18,18 +18,24 @@ import os
 import fontforge
 import lxml.etree
 from cairosvg.bounding_box import bounding_box_path
-from cairosvg.parser import Tree
+from cairosvg.parser import Node, Tree
 from cairosvg.surface import SVGSurface
 
 # LOCAL
-from utils import download_json, existing_directory, existing_file
+from utils import configure_logger, download_json, existing_directory, existing_file
 
-LOG = logging.getLogger()
+LOG = logging.getLogger("script")
+
+USER_IS_LICENSED = 1
+LOAD_ALL_IN_TTC = 4
+NO_GUI = 16
+KEEP_ALL_TABLES = 32
+FLAGS = USER_IS_LICENSED | LOAD_ALL_IN_TTC | NO_GUI | KEEP_ALL_TABLES
 
 SONA_WORDS = "https://api.linku.la/v1/words"
 SANDBOX_WORDS = "https://api.linku.la/v1/sandbox"
 
-IGNORABLES = {
+IGNORABLE_SYMS = {
     "plus",
     "dash",
     "hyphen",
@@ -46,6 +52,15 @@ IGNORABLES = {
     "colon",
     # "space",
 }
+IGNORABLE_TABLES = {
+    "Position",
+    "Pair",
+    # "Substitition",
+    # "AltSubs",
+    "MultSubs",
+    # "Ligature",
+}
+
 VARIANT_NUMBERS = {
     "one": "1",
     "two": "2",
@@ -64,37 +79,22 @@ sandbox = download_json(SANDBOX_WORDS)
 
 NIMI_LINKU = {word_data["word"] for word_data in words.values()}
 NIMI_KO = {word_data["word"] for word_data in sandbox.values()}
-
 NIMI_ALE = NIMI_LINKU | NIMI_KO
 
 
-def strip_metadata(ligature: tuple[str, ...]) -> tuple[str, ...]:
-    # first entry is table name, second is glyph type
-    # both are unneeded
-    return ligature[2:]
-
-
-def is_ignorable(ligature: tuple[str, ...]) -> bool:
-    # see `IGNORABLES`; we ignore ligatures for any non-primitive non-variant glyph
-    if not len(ligature):
-        return True
-    return not not set(ligature).intersection(IGNORABLES)
-
-
 def strip_space(ligature: tuple[str, ...]) -> tuple[str, ...]:
-    # this can make dupes, but they write to the same position
-    # some words DO NOT HAVE a named word-only ligature
+    # dupes will write to the same position
     if ligature[-1] == "space":
         return ligature[:-1]
     return ligature
 
 
-def handle_variant(ligature: tuple[str, ...]) -> tuple[str, tuple[str, ...]]:
+def handle_variant(ligature: tuple[str, ...]) -> tuple[tuple[str, ...], str]:
     if ligature[-1] in VARIANT_NUMBERS:
         variant_suffix = "-" + VARIANT_NUMBERS[ligature[-1]]
         ligature = ligature[:-1]  # last is number
-        return variant_suffix, ligature
-    return "", ligature
+        return ligature, variant_suffix
+    return ligature, ""
 
 
 def get_path_bounding_box(
@@ -102,12 +102,23 @@ def get_path_bounding_box(
 ) -> tuple[float, float, float, float]:
     tree = Tree(bytestring=svg_data)
     surface = SVGSurface(tree, None, 300)
-    for node in tree.children:
-        if getattr(node, "tag", None) == "path":
-            # we expect exactly one
-            return bounding_box_path(surface=surface, node=node)
 
-    raise ValueError("No path found as direct child of SVG root")
+    def find_path(node: Node) -> Node | None:
+        if getattr(node, "tag", None) == "path":
+            return node
+
+        for child in getattr(node, "children", []):
+            found = find_path(child)
+            if found is not None:
+                return found
+
+        return None
+
+    node = find_path(tree)
+    if node is None:
+        raise ValueError("No path element found in SVG")
+
+    return bounding_box_path(surface=surface, node=node)
 
 
 def correct_path_bounding_box(svg_file: str, pad_pct: float = 0.0):
@@ -161,65 +172,101 @@ def correct_path_bounding_box(svg_file: str, pad_pct: float = 0.0):
         doctype="""<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >""",
     )
     with open(svg_file, "wb") as f:
-        f.write(corrected_svg)
+        _ = f.write(corrected_svg)
     return
 
 
+def dumpable_glyphs(font: fontforge.font, dump_unknown: bool = False):
+    for glyph in font.glyphs("encoding"):
+        ligs: tuple[tuple[str, ...], ...] = glyph.getPosSub("*")
+        for lig in ligs:
+            if not len(lig):
+                LOG.debug("Skipping due to blank: %s", lig)
+                continue
+
+            table, tabletype, *text = lig
+
+            if tabletype in IGNORABLE_TABLES:
+                LOG.debug("Skipping due to table: %s", lig)
+                continue
+
+            if set(text).intersection(IGNORABLE_SYMS):
+                LOG.debug("Skipping due to symbol: %s", lig)
+                continue
+
+            text = strip_space(text)
+            text, variant = handle_variant(text)
+
+            word = "".join(text)
+            if word not in NIMI_ALE and not dump_unknown:
+                LOG.debug("Skipping due to unknown word: %s", lig)
+                continue
+
+            word = word + variant
+            yield glyph, word, lig
+
+
 def main(argv: argparse.Namespace):
-    LOG.setLevel(argv.log_level)
+    configure_logger("script", argv.log_level)
 
-    font = fontforge.open(argv.font)
-    for glyph in font.glyphs():
-        table_data = glyph.getPosSub("*")
-        for ligature in table_data:
-            # we have to dump ligatures per-table per-glyph
-            ligature = strip_metadata(ligature)
-            if is_ignorable(ligature):
-                continue
+    font = fontforge.open(argv.font, FLAGS)
+    for glyph, word, lig in dumpable_glyphs(font, argv.dump_unknown):
+        filename = word + "." + argv.format
+        output_file = os.path.join(argv.directory, filename)
+        try:
+            glyph.export(output_file, usetransform=True)
+            LOG.info("Exported %s (%s)", output_file, lig[2:])
+            if argv.format == "svg":
+                correct_path_bounding_box(output_file, 0.05)
+                LOG.debug("Corrected bounding box for %s", output_file)
+        except RuntimeError as e:
+            # literally anything could be wrong with the glyph
+            LOG.warning("Couldn't export %s (%s): %s", filename, lig[2:], e)
 
-            ligature = strip_space(ligature)
-            variant_suffix, ligature = handle_variant(ligature)
-
-            word = "".join(ligature)
-            if word not in NIMI_ALE:
-                continue
-
-            svg_filename = word + variant_suffix + ".svg"
-            LOG.info("Creating %s", svg_filename)
-            output_file = os.path.join(argv.directory, svg_filename)
-            glyph.export(output_file)
-
-            correct_path_bounding_box(output_file, 0.05)
-
-            # WARNING: You CANNOT directly use the output. It MUST be hand-processed.
-            # Different fonts use different variant numbers.
-            # You may also need permission to commit (distribute) font glyphs. Check the license!
+        # WARNING: You CANNOT directly use the output. It MUST be hand-processed.
+        # Different fonts use different variant numbers.
+        # You may also need permission to commit (distribute) font glyphs. Check the license!
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script to dump glyphs from a font.")
-    parser.add_argument(
+    _ = parser.add_argument(
         "--log-level",
+        "-l",
         help="Set the log level",
         type=str.upper,
         dest="log_level",
         default="INFO",
         choices=["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--font",
+        "-f",
         help="A font file to dump glyphs from",
         dest="font",
         required=True,
         type=existing_file,
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--directory",
+        "-d",
         help="A directory to dump glyphs to.",
         dest="directory",
         required=True,
         type=existing_directory,
     )
-    # TODO: Do unicode fonts name their glyphs? If so, we could use those and pass a switch argument
+    _ = parser.add_argument(
+        "--format",
+        help="The format to dump glyps in.",
+        dest="format",
+        default="svg",
+        choices=["svg", "pdf", "png", "bmp", "fig", "xbm", "eps"],
+    )
+    _ = parser.add_argument(
+        "--dump-unknown",
+        help="Whether to dump words unknown to Linku from the font.",
+        dest="dump_unknown",
+        action="store_true",
+    )
     ARGV = parser.parse_args()
     main(ARGV)
