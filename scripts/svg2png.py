@@ -26,8 +26,8 @@ from utils import existing_directory
 LOG = logging.getLogger()
 
 BORDER_CSS = """path {
-  fill: black;
-  stroke: #CDCDCD;
+  fill: white;
+  stroke: #000000;
   stroke-width: 1em;
 }
 """
