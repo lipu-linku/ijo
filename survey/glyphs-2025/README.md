@@ -123,7 +123,7 @@ yupekosi
 
 ### sandbox word glyphs
 
-All words here don't have any alternates either.
+All words here don't have any alternates either. kana and molusa were submitted 5+ times in the final question for additional glyphs.
 
 ![](sandbox.png)
 
