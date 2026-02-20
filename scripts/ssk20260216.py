@@ -257,7 +257,6 @@ SSK_MAP = {
     "kipisi-2": "kipisi2",
     "kisa-1": "kisa",
     "kokosila-1": "kokosila2",
-    "konwe-2": "konwe",
     "kulijo-2": "",  # NOTE: python ./dump_font.py --font ~/Downloads/PuLukin.otf --dir ../temp/ --ligature kulijo
     "kulijo-3": "kulijo2",
     "lan-1": "lan1",
