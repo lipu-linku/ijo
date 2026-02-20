@@ -13,19 +13,15 @@ python ./scripts/dump_font.py -f ./nasinsitelen/sitelenselikiwenasuki.ttf -d ./s
 import argparse
 import logging
 import os
-import re
 import sys
 from math import ceil, floor
 
 # PDM
 import fontforge
 import lxml.etree
-import numpy as np
 from cairosvg.bounding_box import bounding_box_path
 from cairosvg.parser import Node, Tree
 from cairosvg.surface import SVGSurface
-from svgpathtools import Path, parse_path
-from svgpathtools.path import transform as svg_transform
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(SCRIPT_DIR)
@@ -110,9 +106,6 @@ NIMI_KO = {word_data["word"] for word_data in sandbox.values()}
 NIMI_ALE = NIMI_LINKU | NIMI_KO
 
 
-Matrix = tuple[float, float, float, float, float, float]
-
-
 def strip_space(ligature: tuple[str, ...]) -> tuple[str, ...]:
     # dupes will write to the same position
     if ligature[-1] == "space":
@@ -136,72 +129,6 @@ def subst_syms(
     joiner: str = "",
 ) -> tuple[str, ...]:
     return tuple(SYMBOL_MAP.get(item, item) for item in ligature)
-
-
-def get_transform_matrix(transform: str) -> Matrix:
-    match = re.search(r"matrix\(([^)]+)\)", transform)
-    if not match:
-        raise ValueError("Only matrix() transforms are supported")
-
-    values = list(map(float, match.group(1).replace(",", " ").split()))
-    if len(values) != 6:
-        raise ValueError("Matrix must have exactly 6 values")
-
-    return tuple(values)
-
-
-def _apply_matrix_to_path(path: Path, matrix) -> Path:
-    a, b, c, d, e, f = matrix
-    tf = np.array(
-        [
-            [a, c, e],
-            [b, d, f],
-            [0, 0, 1],
-        ]
-    )
-    return svg_transform(path, tf)
-
-
-def bake_transform(svg_data: bytes) -> bytes:
-    parser = lxml.etree.XMLParser(remove_blank_text=True)
-    root = lxml.etree.fromstring(svg_data, parser)
-
-    nsmap = {"svg": root.nsmap.get(None)} if None in root.nsmap else None
-
-    groups = (
-        root.xpath(".//svg:g[@transform]", namespaces=nsmap)
-        if nsmap
-        else root.xpath(".//g[@transform]")
-    )
-
-    for g in groups:
-        transform = g.attrib.get("transform")
-        if not transform or "matrix" not in transform:
-            continue
-
-        matrix = get_transform_matrix(transform)
-
-        paths = (
-            g.xpath(".//svg:path", namespaces=nsmap) if nsmap else g.xpath(".//path")
-        )
-        for path_elem in paths:
-            d = path_elem.attrib.get("d")
-            if not d:
-                continue
-
-            parsed = parse_path(d)
-            transformed = _apply_matrix_to_path(parsed, matrix)
-            path_elem.attrib["d"] = transformed.d()
-
-        # Remove transform attribute
-        del g.attrib["transform"]
-
-    return lxml.etree.tostring(
-        root,
-        pretty_print=True,
-        xml_declaration=True,
-        encoding="utf-8",
-    )
 
 
 def get_path_bounding_box(
@@ -232,7 +159,6 @@ def fix_svg_viewbox(svg_file: str, pad_pct: float = 0.0, even_sides=False):
     with open(svg_file, "rb") as f:
         svg_data = f.read()
 
-    svg_data = bake_transform(svg_data)
     min_x, min_y, width, height = get_path_bounding_box(svg_data)
 
     if even_sides:
@@ -261,13 +187,7 @@ def fix_svg_viewbox(svg_file: str, pad_pct: float = 0.0, even_sides=False):
     svg_elem.attrib.pop("width")
     svg_elem.attrib.pop("height")
 
-    corrected_svg = lxml.etree.tostring(
-        svg_elem,
-        # pretty_print=False,
-        # xml_declaration=True,
-        # encoding="UTF-8",
-        # doctype="""<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >""",
-    )
+    corrected_svg = lxml.etree.tostring(svg_elem)
     with open(svg_file, "wb") as f:
         _ = f.write(corrected_svg)
     return
@@ -328,22 +248,13 @@ def dump_glyph(
     filename = name + "." + format
     output_file = os.path.join(output_dir, filename)
     try:
-        # NOTE: if some glyphs fail to export, update fontforge to the latest commit
-        # you _can_ set usetransform=True but this, per the name,
-        # adds a transform to the svg which breaks bounding box calc
-        # see https://github.com/fontforge/fontforge/issues/5695
-
+        glyph.unlinkRef()  # https://github.com/fontforge/fontforge/issues/5759
         glyph.export(output_file, usetransform=False)
         LOG.info("Exported %s", output_file)
 
         if format == "svg":
-            try:
-                fix_svg_viewbox(output_file, 0.05)
-                LOG.debug("Fixed viewbox in %s (%s)", output_file, name)
-            except ValueError:
-                glyph.export(output_file, usetransform=True)
-                fix_svg_viewbox(output_file, 0.05)
-                LOG.info("Fixed viewbox %s (%s) with transform", output_file, name)
+            fix_svg_viewbox(output_file, 0.05)
+            LOG.debug("Fixed viewbox in %s (%s)", output_file, name)
 
         return True
     except RuntimeError as e:
@@ -424,7 +335,7 @@ if __name__ == "__main__":
     )
     _ = parser.add_argument(
         "--format",
-        help="The format to dump glyps in.",
+        help="The format to dump glyphs in.",
         dest="format",
         default="svg",
         choices=["svg", "pdf", "png", "bmp", "fig", "xbm", "eps"],
