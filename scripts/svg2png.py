@@ -62,6 +62,7 @@ def main(argv: argparse.Namespace):
             output_width=256,
             output_height=256,
         )
+        LOG.info("Converted %s to %s", fullsvg, fullpng)
 
 
 if __name__ == "__main__":

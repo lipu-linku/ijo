@@ -1,4 +1,5 @@
-python-magic==0.4.27
-fontforge-stubs==2025.11.10
 cairosvg==2.8.2
+fontforge-stubs==2026.1.2
 lxml==6.0.2
+python-magic==0.4.27
+svgpathtools==1.7.2
