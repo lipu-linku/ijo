@@ -247,13 +247,17 @@ def dump_glyph(
 ) -> bool:
     filename = name + "." + format
     output_file = os.path.join(output_dir, filename)
+    pad_pct = 0.05
+    if name == "lili":
+        pad_pct = 1.5
+
     try:
         glyph.unlinkRef()  # https://github.com/fontforge/fontforge/issues/5759
         glyph.export(output_file, usetransform=False)
         LOG.info("Exported %s", output_file)
 
         if format == "svg":
-            fix_svg_viewbox(output_file, 0.05)
+            fix_svg_viewbox(output_file, pad_pct)
             LOG.debug("Fixed viewbox in %s (%s)", output_file, name)
 
         return True
