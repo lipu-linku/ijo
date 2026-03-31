@@ -14,7 +14,7 @@ from utils import download, download_json
 
 LOG = logging.getLogger()
 
-SONA_FONTS = "https://api.linku.la/v1/fonts"
+SONA_FONTS = "https://api.linku.la/v2/fonts"
 
 VALID_LICENSE_FAMILIES = [
     "GPL",
