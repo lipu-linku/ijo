@@ -280,6 +280,7 @@ SSK_MAP = {
     "misa-6": "misa5",
     "monsuta-2": "",  # NOTE: python ./dump_font.py --font ../nasinsitelen/jan-Mate.ttf --dir ../temp/ --ligature monsuta
     "mulapisu-1": "mulapisu1",
+    "musitenpike-1": "musitenpike",
     "mun-2": "",  # NOTE: python ./scripts/dump_font.py --font nasinsitelen/sitelen-mu-mute-tan-kijetesantakalu-Nawili.ttf --dir temp/ --ligature mun
     "nena-2": "",  # NOTE: python ./scripts/dump_font.py --font nasinsitelen/sitelen-mu-mute-tan-kijetesantakalu-Nawili.ttf --dir temp/ --ligature lupa
     "ojuta-2": "",  # NOTE:  python ./scripts/dump_font.py --font nasinsitelen/linjaKita.otf --dir temp/ --ligature ojuta
