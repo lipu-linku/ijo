@@ -222,6 +222,7 @@ def dumpable_glyphs(
             text = strip_space(text)
             if not text:
                 LOG.debug("Skipping due to space-only lig: %s", text)
+                continue
             text, variant = handle_variant(text)
             text = subst_syms(text)
 
