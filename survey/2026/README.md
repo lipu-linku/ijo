@@ -97,7 +97,7 @@ The common-uncommon boundary has slowly consolidated as a de facto teacher stand
 
 **oko** has been on a consistent downward trend since 2022.
 
-It is difficult to share a particular reason for why the remainingn words may have shifted.
+It is difficult to share a particular reason for why the remaining words may have shifted.
 
 ## Summary: all category changes
 
@@ -108,4 +108,3 @@ sandbox -> obscure: **kisa**
 core -> uncommon: **pu**
 
 common -> uncommon: **ku**
-
