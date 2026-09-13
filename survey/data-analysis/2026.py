@@ -213,6 +213,6 @@ scores["cat_changed"] = scores.apply(
     axis=1,
 )
 
-scores.to_csv(f"scores-{YEAR}.csv", sep="\t")
+scores.to_csv(f"scores-{YEAR}.tsv", sep="\t")
 
 scores[YEAR][scores[YEAR].notna()].round().astype(int).rename("value").rename_axis("word").to_csv(f"{YEAR}.csv")
