@@ -11,12 +11,12 @@ PREV = "2025"
 
 
 def get_last_year():
-    series = pd.read_csv("2025.csv", index_col=0)["value"]
+    series = pd.read_csv(f"{PREV}.csv", index_col=0)["value"]
     return series
     # return dict(zip(df.word, df.value))
 
 
-def get_category(value: float) -> str:
+def get_category_legacy(value: float) -> str:
     # Uses raw numbers, so doesn't support su
     # Which was grandfathered into uncommon via estimation
     if pd.isna(value):
@@ -32,6 +32,21 @@ def get_category(value: float) -> str:
         return "obscure"
     return "sandbox"
 
+def get_category(value: float) -> str:
+    # Uses raw numbers, so doesn't support su
+    # Which was grandfathered into uncommon via estimation
+    if pd.isna(value):
+        return "sandbox"
+    value = round(value)
+    if value >= 85:
+        return "core"
+    if value >= 60:
+        return "common"
+    if value >= 30:
+        return "uncommon"
+    if value >= 5:
+        return "obscure"
+    return "sandbox"
 
 def get_scores(df: pd.DataFrame) -> pd.Series:
     # Generate a word list sorted by mean score
@@ -57,7 +72,7 @@ SOURCES = [
     # Main sheet
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFN6Gi0jD3h1J3nx79_nJ2HRrg0cKXNXjoDeiktc2Rx6w3DeeadKcd06st44woLyUzIJoBXMzlg7yU/pub?gid=2054660320&single=true&output=csv",
     # No-Google account sheet
-    # TODO
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFN6Gi0jD3h1J3nx79_nJ2HRrg0cKXNXjoDeiktc2Rx6w3DeeadKcd06st44woLyUzIJoBXMzlg7yU/pub?gid=2145416153&single=true&output=csv",
 ]
 
 COLUMN_ALIASES = {
@@ -138,6 +153,12 @@ print("Fake word users:", len(df[(df.w_oblig_jalate > 0)]))
 # Delete rows that erroneously report using fake words
 df = df.drop(df[(df.w_oblig_jalate > 0)].index)
 
+print("Suspiciously high obscure word users:", len(df[df.loc[:, df.columns.str.contains("w_obsc_")].mean(axis=1) >= 0.8]))
+
+# Delete rows that suspiciously report confidence using many of the obscure words
+# Target w_obsc_* == 1, for at least 90% of w_obsc_*
+df = df.drop(df[df.loc[:, df.columns.str.contains("w_obsc_")].mean(axis=1) >= 0.9].index)
+
 # Output the vocab size distribution
 # df.loc[:, df.columns.str.contains("w_")].sum(axis=1).sort_values().to_csv("vocab_size_2025.csv")
 
@@ -185,11 +206,13 @@ scores = pd.DataFrame({
 }).sort_values(PREV, ascending=False).sort_values(YEAR, ascending=False)
 
 # Highlight words that passed a threshold
-scores[f"{PREV}_cat"] = scores[PREV].apply(get_category)
+scores[f"{PREV}_cat"] = scores[PREV].apply(get_category_legacy)
 scores[f"{YEAR}_cat"] = scores[YEAR].apply(get_category)
 scores["cat_changed"] = scores.apply(
     lambda x: x[f"{YEAR}_cat"] != x[f"{PREV}_cat"],
     axis=1,
 )
 
-scores.to_csv("scores-2026.csv", sep="\t")
+scores.to_csv(f"scores-{YEAR}.csv", sep="\t")
+
+scores[YEAR][scores[YEAR].notna()].round().astype(int).rename("value").rename_axis("word").to_csv(f"{YEAR}.csv")
